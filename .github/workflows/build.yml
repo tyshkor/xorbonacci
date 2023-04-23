@@ -1,0 +1,28 @@
+name: main
+
+on:
+    push:
+        branches-ignore:
+        - nightly
+    pull_request:
+        branches-ignore:
+        - nightly
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+
+      - name: Run clippy and fmt
+        run:  rustup component add rustfmt --toolchain stable-2023-04-20-x86_64-unknown-linux-gnu ; rustup component add clippy --toolchain stable-2023-04-20-x86_64-unknown-linux-gnu ; cargo fmt ; cargo clippy
+
+      - name: Build
+        run: cargo build
+
+      - name: Test
+        run: cargo test
